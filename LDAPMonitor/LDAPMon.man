@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<instrumentationManifest
+    xmlns="http://schemas.microsoft.com/win/2004/08/events"
+    xmlns:win="http://manifests.microsoft.com/win/2004/08/windows/events"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://schemas.microsoft.com/win/2004/08/events eventman.xsd"
+    >
+    <instrumentation>
+        <events>
+            <provider 
+                name="LDAPMon" 
+                guid="{f33b46f6-70e9-4d43-ab9e-d923397a5060}" 
+                symbol="LDAPMonProvider" 
+                resourceFileName="C:\Windows\LDAPMon.dll" 
+                messageFileName="C:\Windows\LDAPMon.dll"
+                >
+                 <channels>
+                    <channel name="LDAPMon/Operational" chid="LDAPMon" enabled="true" type="Operational" isolation="System">
+                        <logging>
+                            <maxSize>67112660</maxSize>
+                        </logging>
+                    </channel>
+				 </channels>
+                <templates>
+                   <template tid="EID1">
+                        <data 
+                            name="EventTime:" 
+                            inType="win:FILETIME"
+                            outType="xs:dateTime">
+                        </data>
+                        <data 
+                            name="ScopeOfSearch" 
+                             inType="win:UInt32"
+                            outType="xs:unsignedInt">
+                        </data>
+                        <data 
+                            name="SearchFilter" 
+                            inType="win:UnicodeString"
+                            outType="xs:string">
+                        </data>
+                        <data 
+                            name="DistinguishedName" 
+                            inType="win:UnicodeString"
+                            outType="xs:string">
+                        </data>
+                        <data 
+                            name="AttributeList" 
+                            inType="win:UnicodeString"
+                            outType="xs:string">
+                        </data>
+                        <data 
+                            name="ProcessId" 
+                             inType="win:UInt32"
+                            outType="xs:unsignedInt">
+                        </data>
+                    </template>
+                </templates>
+                <events>
+                    <event value="1" 
+                        channel="LDAPMon"
+                        level="win:Informational" 
+                        template="EID1" 
+						opcode="win:Info"
+                        symbol="LDAPSearch"
+                        message ="$(string.LDAPSearch.EventMessage)"/>    
+                </events>
+            </provider>
+        </events>
+    </instrumentation>
+    <localization xmlns="http://schemas.microsoft.com/win/2004/08/events">
+        <resources culture="en-US">
+            <stringTable>
+                <string id="LDAPSearch.EventMessage" value="LDAP Search %n%n EventTime: %1 %n ScopeOfSearch: %2 %n SearchFilter: %3 %n DistringuisedName: %4 %n AttibuteList: %5 %n ProcessId: %6"/>
+            </stringTable>
+        </resources>
+    </localization>
+</instrumentationManifest>
