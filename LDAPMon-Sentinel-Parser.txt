@@ -1,0 +1,9 @@
+Event
+| where Source == "LDAPMon"
+| extend RenderedDescription = tostring(split(RenderedDescription, ":")[0])
+| extend EventData = parse_xml(EventData).DataItem.EventData.Data
+| mv-expand bagexpansion=array EventData
+| evaluate bag_unpack(EventData)
+| extend Key = tostring(column_ifexists('@Name', "")), Value = tostring(column_ifexists('#text', ""))
+| evaluate pivot(Key, any(Value), TimeGenerated, Source, EventLog, Computer, EventLevel, EventLevelName, EventID, RenderedDescription, MG, ManagementGroupName, _ResourceId)
+| extend EventTime = column_ifexists("EventTime", ""), ProcessId = column_ifexists("ProcessId", ""), LDAPQuery = column_ifexists("SearchFilter", ""), ScopeOfSearch = column_ifexists("ScopeOfSearch", ""), DistinguisedNamed = column_ifexists("DistinguishedName", ""), AttributeList = column_ifexists("AttributeList", "")

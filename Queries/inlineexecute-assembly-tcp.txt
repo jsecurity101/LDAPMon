@@ -1,0 +1,15 @@
+//
+// inlineExecute-Assembly based detection. Query checks LDAP searches where the parent has a TCP/IP communications
+//
+LDAPMON_Parser
+| join kind=inner
+(
+SysmonEventParsed
+| where EventID == 1
+| where User !contains "NT AUTHORITY" and  Image !contains "Microsoft"
+) on ProcessId, Computer
+| join kind=inner (
+SysmonEventParsed
+| where EventID == 3 and Initiated == "true" and DestinationPort != "389"
+) on $left.ProcessGuid == $right.ProcessGuid, Computer
+| summarize count() by Computer, User, ParentImage, ParentProcessGuid, ProcessGuid, Image, CommandLine, tolower(LDAPQuery), AttributeList, DestinationPort1

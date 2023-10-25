@@ -1,0 +1,11 @@
+// 
+// Looking for everything
+//
+LDAPMON_Parser
+| join kind=inner
+(
+SysmonEventParsed
+| where EventID == 1
+| where User !contains "NT AUTHORITY" and  Image !contains "Microsoft" and Image !endswith "LDAPMonitor.exe" and (Image !contains "rundll32.exe" and CommandLine !contains "rundll32.exe" and CommandLine !contains "{") and (Image != "C:\\Windows\\System32\\SecurityHealthSystray.exe") and (Image != "C:\\Windows\\System32\\svchost.exe" and CommandLine !contains "C:\\Windows\\system32\\svchost.exe -k Local") and Image != "C:\\Windows\\System32\\wevtutil.exe"
+) on ProcessId, Computer
+| summarize count() by Computer, User, ParentImage, Image, CommandLine, tolower(LDAPQuery), AttributeList
