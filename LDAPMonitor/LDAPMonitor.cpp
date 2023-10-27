@@ -219,7 +219,7 @@ DWORD UninstallManifest() {
     ZeroMemory(&si, sizeof(si));
     si.cb = sizeof(si);
     ZeroMemory(&pi, sizeof(pi));
-    wchar_t cmdLine[] = L"C:\\Windows\\System32\\wevtutil.exe um LDAPMon.man";
+    wchar_t cmdLine[] = L"C:\\Windows\\System32\\wevtutil.exe um C:\\Windows\\LDAPMon.man";
     if (!CreateProcessW(NULL, cmdLine, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
         printf("CreateProcess Failed");
         return GetLastError();
@@ -241,7 +241,7 @@ DWORD InstallManifest() {
     ZeroMemory(&si, sizeof(si));
     si.cb = sizeof(si);
     ZeroMemory(&pi, sizeof(pi));
-    wchar_t cmdLine[] = L"C:\\Windows\\System32\\wevtutil.exe im LDAPMon.man";
+    wchar_t cmdLine[] = L"C:\\Windows\\System32\\wevtutil.exe im C:\\Windows\\LDAPMon.man";
     if (!CreateProcessW(NULL, cmdLine, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
         printf("[-] CreateProcess Failed");
         return GetLastError();
@@ -259,6 +259,10 @@ int main()
     UninstallManifest();
     CopyFile(L"LDAPMon.dll", L"C:\\Windows\\LDAPMon.dll", FALSE);
     printf("[*] LDAPMon.dll Copied to C:\\Windows\\LDAPMon.dll\n");
+
+    CopyFile(L"LDAPMon.man", L"C:\\Windows\\LDAPMon.man", FALSE);
+    printf("[*] LDAPMon.man Copied to C:\\Windows\\LDAPMon.man\n");
+
     InstallManifest();
 
     printf("[*] Starting LDAPMon...\n");
